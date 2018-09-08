@@ -1,0 +1,15 @@
+let config = {
+    mqtt_data: {
+        username: 'xxx',
+        password: 'xxx',
+        port: 10109,
+        host: 'mqtt://url.com',
+        topic: 'topic/name'
+    },
+    sensor_data: {
+        dht_version: 11,
+        pin_number: 17
+    }
+};
+
+module.exports = config;
