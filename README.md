@@ -67,6 +67,31 @@ you should see a console message with Temp and Humidity
 * * * * * node /path/to/node-dht-mqtt/app.js
 ```
 
+## Config:
+
+```javascript
+let config = {
+    mqtt_data: {
+        username: 'xxx',            // your mqtt username
+        password: 'xxx',            // your mqtt password
+        port: 10109,                // mqtt port
+        host: 'mqtt://url.com',     // mqtt url
+        topic: 'topic/name'         // topic name, simple string
+    },
+    sensor_data: {
+        dht_version: 11,            // Your DHT sensor version, 11 or 22
+        pin_number: 17              // the GPIO you connected the DHT to. See below image
+    }
+};
+
+module.exports = config;
+
+```
+
+For the GPIO pinout see this image:
+
+![Raspberry Pi Pinout](/gpio.png)
+
 
 ## Debug
 Since node-dht-sensor and BCM won't compile if you are not on a Raspberry Pi,
