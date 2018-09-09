@@ -1,4 +1,4 @@
-// configuration check
+// --------------------------------- check and load deps -----------------------------------------------//
 let config, mqtt, sensor;
 try {
     config = require('./config');
@@ -8,7 +8,7 @@ try {
 }
 
 try {
-    mqtt = require('mqtt');
+    mqtt = require('async-mqtt');
 } catch (ex) {
     console.log('mqtt package not found. Exiting.');
     process.exit(1);
@@ -20,6 +20,8 @@ try {
     console.log('node-dht-sensor package not installed or not correctly configured. TEST temperature (99) and humidity (1) will be used');
 }
 
+// ---------------------------------------- main script --------------------------------------------------//
+
 // exit after configured timeout
 setTimeout((function() {
     console.log('Timeout reached, exiting');
@@ -28,28 +30,51 @@ setTimeout((function() {
 
 let client  = mqtt.connect(config.mqtt_data.host, { port: config.mqtt_data.port, username: config.mqtt_data.username, password: config.mqtt_data.password});
 
-client.on('connect', function () {
 
-    if (sensor) {
-        sensor.read(config.sensor_data.dht_version, config.sensor_data.pin_number, function(err, temperature, humidity) {
-            if (!err) {
-                let temp = temperature.toFixed(1);
-                let hum = humidity.toFixed(1);
-                client.publish(config.mqtt_data.topic, JSON.stringify({temperature: temp, humidity: hum}));
-                client.end();
-                console.log('Correctly published temperature: '+ temp + ' and humidity: ' + hum);
-                process.exit(0);
-            }
-        });
-    } else {
-        // mock temperature
-        let temp = 99;
-        let hum = 1;
-        client.publish(config.mqtt_data.topic, JSON.stringify({temperature: temp, humidity: hum}));
-        client.end();
-        console.log('Correctly published TEST temperature: '+ temp + ' and humidity: ' + hum);
-        process.exit(0);
-    }
-
+main().then(() => {
+    console.log('Exiting');
+    process.exit(0);
 });
 
+// ---------------------------------------- async functions --------------------------------------------------//
+
+async function main() {
+    let promise = new Promise((resolve, reject) => {
+        client.on('connect',
+            () => readSensorAndExit().then(
+                () => resolve()
+            )
+        );
+    });
+
+    let res = await promise;
+    return res;
+}
+
+async function readSensorAndExit() {
+    let promise = new Promise((resolve, reject) => {
+        if (sensor) {
+            // get real sensor data
+            sensor.read(config.sensor_data.dht_version, config.sensor_data.pin_number, (err, temp, hum) => {
+                publishData(err, temp, hum).then(() => resolve());
+            });
+        } else {
+            // publish fake sensor data
+            publishData(null, 99, 1).then(() => resolve());
+        }
+    });
+
+    let res = await promise;
+    return res;
+}
+
+async function publishData(error, temperature, humidity) {
+    try {
+        await client.publish(config.mqtt_data.topic, JSON.stringify({temperature: temperature, humidity: humidity}));
+        await client.end();
+        console.log('Correctly published temperature: '+ temperature + ' and humidity: ' + humidity);
+    } catch (e) {
+        console.log(e.stack);
+        process.exit(1);
+    }
+}
