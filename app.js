@@ -20,6 +20,11 @@ try {
     console.log('node-dht-sensor package not installed or not correctly configured. TEST temperature (99) and humidity (1) will be used');
 }
 
+// exit after configured timeout
+setTimeout((function() {
+    return process.exit(1);
+}), config.other_options.timeout);
+
 let client  = mqtt.connect(config.mqtt_data.host, { port: config.mqtt_data.port, username: config.mqtt_data.username, password: config.mqtt_data.password});
 
 client.on('connect', function () {

@@ -81,6 +81,9 @@ let config = {
     sensor_data: {
         dht_version: 11,            // Your DHT sensor version, 11 or 22
         pin_number: 17              // the GPIO you connected the DHT to. See below image
+    },
+    other_options: {
+        timeout: 5000               // after this timeout the script will exit
     }
 };
 

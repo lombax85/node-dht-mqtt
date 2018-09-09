@@ -9,6 +9,9 @@ let config = {
     sensor_data: {
         dht_version: 11,
         pin_number: 17
+    },
+    other_options: {
+        timeout: 5000
     }
 };
 
