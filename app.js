@@ -22,7 +22,8 @@ try {
 
 // exit after configured timeout
 setTimeout((function() {
-    return process.exit(1);
+    console.log('Timeout reached, exiting');
+    process.exit(1);
 }), config.other_options.timeout);
 
 let client  = mqtt.connect(config.mqtt_data.host, { port: config.mqtt_data.port, username: config.mqtt_data.username, password: config.mqtt_data.password});
@@ -37,6 +38,7 @@ client.on('connect', function () {
                 client.publish(config.mqtt_data.topic, JSON.stringify({temperature: temp, humidity: hum}));
                 client.end();
                 console.log('Correctly published temperature: '+ temp + ' and humidity: ' + hum);
+                process.exit(0);
             }
         });
     } else {
@@ -46,6 +48,7 @@ client.on('connect', function () {
         client.publish(config.mqtt_data.topic, JSON.stringify({temperature: temp, humidity: hum}));
         client.end();
         console.log('Correctly published TEST temperature: '+ temp + ' and humidity: ' + hum);
+        process.exit(0);
     }
 
 });
