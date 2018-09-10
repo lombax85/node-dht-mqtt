@@ -45,8 +45,8 @@ npm install node-gyp -g
 git clone https://github.com/lombax85/node-dht-mqtt.git
 cd node-dht-mqtt
 
-# install project dependencies
-npm i
+# install project dependencies (if you face permission errors add --unsafe-perm)
+npm i --unsafe-perm
 
 # copy configuration template
 cp config.js.example config.js
