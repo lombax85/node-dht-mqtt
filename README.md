@@ -42,7 +42,7 @@ make install
 npm install node-gyp -g
 
 # clone repo
-git clone git@github.com:lombax85/node-dht-mqtt.git
+git clone https://github.com/lombax85/node-dht-mqtt.git
 cd node-dht-mqtt
 
 # install project dependencies
