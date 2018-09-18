@@ -38,21 +38,19 @@ main().then(() => {
 
 // ---------------------------------------- async functions --------------------------------------------------//
 
-async function main() {
-    let promise = new Promise((resolve, reject) => {
+function main() {
+    return new Promise((resolve, reject) => {
         client.on('connect',
-            () => readSensorAndExit().then(
-                () => resolve()
-            )
+            async () => {
+                await readSensorAndExit();
+                resolve();
+            }
         );
     });
-
-    let res = await promise;
-    return res;
 }
 
-async function readSensorAndExit() {
-    let promise = new Promise((resolve, reject) => {
+function readSensorAndExit() {
+    return new Promise((resolve, reject) => {
         if (sensor) {
             // get real sensor data
             sensor.read(config.sensor_data.dht_version, config.sensor_data.pin_number, (err, temp, hum) => {
@@ -63,9 +61,6 @@ async function readSensorAndExit() {
             publishData(null, 99, 1).then(() => resolve());
         }
     });
-
-    let res = await promise;
-    return res;
 }
 
 async function publishData(error, temperature, humidity) {
