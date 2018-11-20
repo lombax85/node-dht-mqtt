@@ -65,9 +65,11 @@ function readSensorAndExit() {
 
 async function publishData(error, temperature, humidity) {
     try {
-        await client.publish(config.mqtt_data.topic, JSON.stringify({temperature: temperature, humidity: humidity}));
-        await client.end();
-        console.log('Correctly published temperature: '+ temperature + ' and humidity: ' + humidity);
+        if (temperature != 0 && humidity != 0) {
+            await client.publish(config.mqtt_data.topic, JSON.stringify({temperature: temperature, humidity: humidity}));
+            await client.end();
+            console.log('Correctly published temperature: '+ temperature + ' and humidity: ' + humidity);
+        }
     } catch (e) {
         console.log(e.stack);
         process.exit(1);
