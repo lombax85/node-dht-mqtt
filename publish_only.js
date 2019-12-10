@@ -42,8 +42,8 @@ function main() {
     return new Promise((resolve, reject) => {
         client.on('connect',
             async () => {
-                let temperature = parseInt(process.argv[2], 10);
-                let humidity = parseInt(process.argv[3], 10);
+                let temperature = parseFloat(process.argv[2]);
+                let humidity = parseFloat(process.argv[3]);
 
                 if (isNaN(temperature)) {
                     reject('Temperature is not a number');
