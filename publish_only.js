@@ -44,6 +44,7 @@ function main() {
             async () => {
                 let temperature = parseFloat(process.argv[2]);
                 let humidity = parseFloat(process.argv[3]);
+                let battery = parteFloat(process.argv[4]);
 
                 if (isNaN(temperature)) {
                     reject('Temperature is not a number');
@@ -55,18 +56,23 @@ function main() {
                     return;
                 }
 
-                await publishData(null, temperature, humidity).then(() => resolve());
+                if (isNaN(battery)) {
+                    reject('Battery is not a number');
+                    return;
+                }
+
+                await publishData(null, temperature, humidity, battery).then(() => resolve());
             }
         );
     });
 }
 
-async function publishData(error, temperature, humidity) {
+async function publishData(error, temperature, humidity, battery) {
     try {
-        if (temperature != 0 && humidity != 0) {
-            await client.publish(config.mqtt_data.topic, JSON.stringify({temperature: temperature, humidity: humidity}));
+        if (temperature != 0 && humidity != 0 && battery != 0) {
+            await client.publish(config.mqtt_data.topic, JSON.stringify({temperature: temperature, humidity: humidity, battery: battery}));
             await client.end();
-            console.log('Correctly published temperature: '+ temperature + ' and humidity: ' + humidity);
+            console.log('Correctly published temperature: '+ temperature + ' and humidity: ' + humidity + ' and battery: ' + battery);
         }
     } catch (e) {
         console.log(e.stack);
