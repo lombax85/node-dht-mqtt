@@ -44,7 +44,7 @@ function main() {
             async () => {
                 let temperature = parseFloat(process.argv[2]);
                 let humidity = parseFloat(process.argv[3]);
-                let battery = parteFloat(process.argv[4]);
+                let battery = parseFloat(process.argv[4]);
 
                 if (isNaN(temperature)) {
                     reject('Temperature is not a number');
