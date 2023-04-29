@@ -6,8 +6,8 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
-    "async-mqtt": "^1.0.1",
-    "mqtt": "^2.18.8",
+    "async-mqtt": "^2.6.3",
+    "mqtt": "^4.3.7",
     "node-dht-sensor": "0.0.34"
   }
 }
